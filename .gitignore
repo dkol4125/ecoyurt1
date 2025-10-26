@@ -1,0 +1,15 @@
+# Forge artifacts
+out/
+cache/
+broadcast/
+
+# Dependencies
+lib/
+
+# Secrets
+.env
+.env.*
+*.secret
+
+# OS junk
+.DS_Store
