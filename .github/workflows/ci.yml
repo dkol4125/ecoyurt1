@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Install Foundry dependencies
+        run: |
+          forge install OpenZeppelin/openzeppelin-contracts@v5.4.0
+          forge install foundry-rs/forge-std@v1.9.6
+
+      - name: Show toolchain
+        run: |
+          forge --version
+          anvil --version
+
+      - name: Build contracts
+        run: forge build
+
+      - name: Run unit tests
+        run: forge test -vv
+
+  anvil-smoke-test:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Install Foundry dependencies
+        run: |
+          forge install OpenZeppelin/openzeppelin-contracts@v5.4.0
+          forge install foundry-rs/forge-std@v1.9.6
+
+      - name: Build contracts
+        run: forge build
+
+      - name: Start Anvil
+        run: |
+          set -euo pipefail
+          nohup anvil \
+            --host 127.0.0.1 \
+            --port 8545 \
+            --mnemonic "test test test test test test test test test test test junk" \
+            --chain-id 31337 \
+            --accounts 10 \
+            --base-fee 0 \
+            --gas-price 0 \
+            > anvil.log 2>&1 &
+          echo $! > anvil.pid
+          ready=0
+          for _ in $(seq 1 30); do
+            if command -v nc >/dev/null 2>&1; then
+              if nc -z 127.0.0.1 8545; then
+                ready=1
+                break
+              fi
+            elif command -v timeout >/dev/null 2>&1; then
+              if timeout 1 bash -c ': >/dev/tcp/127.0.0.1/8545' 2>/dev/null; then
+                ready=1
+                break
+              fi
+            fi
+            sleep 1
+          done
+          if [[ "${ready}" -ne 1 ]]; then
+            echo "Anvil failed to start within timeout" >&2
+            cat anvil.log >&2 || true
+            exit 1
+          fi
+          curl -s -X POST --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' http://127.0.0.1:8545 > /dev/null || {
+            echo "Anvil JSON-RPC probe failed" >&2
+            cat anvil.log >&2 || true
+            exit 1
+          }
+
+      - name: Run local smoke test script
+        env:
+          FOUNDRY_PROFILE: ci
+          ANVIL_MNEMONIC: "test test test test test test test test test test test junk"
+        run: forge script script/LocalAnvilTest.s.sol:LocalAnvilTest --rpc-url http://127.0.0.1:8545 --broadcast -vvv
+
+      - name: Stop Anvil
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ -f anvil.pid ]]; then
+            kill $(cat anvil.pid) 2>/dev/null || true
+            rm -f anvil.pid
+          fi
+          cat anvil.log || true

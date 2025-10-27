@@ -1,66 +1,72 @@
-## Foundry
+# EcoYurt (EYR) — Fractional Real-Estate Token
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+> **LEGAL DISCLAIMER:** This repository provides an illustrative, example-only ERC‑20 token design intended for educational and demonstration purposes. It is **not** a production‑grade implementation, has **not** undergone security review, and should **not** be deployed for real‑world financial activity. Nothing herein constitutes legal, financial, or regulatory advice.
 
-Foundry consists of:
+A minimal ERC-20 token for fractional ownership of yurts in Uzbekistan, with built-in income distribution and exit mechanics. This implementation is intended strictly as an example and must not be used as-is in production environments.
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+---
 
-## Documentation
+## Highlights
 
-<https://book.getfoundry.sh/>
+- Fixed supply: designed for “10,000 EYR = 1 yurt”.  
+- Whitelist-gated transfers (KYC/AML ready).  
+- Snapshot-based income payouts (in a UZS-pegged stable token).  
+- Clean exit flow: sale proceeds in UZS-token → holders redeem pro-rata and burn.
+- Example‑only reference implementation; **not** production ready.
 
-## Usage
+---
 
-### Build
+## Key Flows
 
-```shell
+### Admin Setup
+
+1. Deploy with total shares = **number of yurts × 10,000 EYR × 10ⁿ decimals**.  
+2. Whitelist the admin and initial investors.  
+3. Transfers among whitelisted wallets only.
+
+### Income Distribution
+
+1. Admin deposits UZS-stable asset (e.g., pilot token) via `depositIncome`.  
+2. Call `startDistribution` → snapshot taken.  
+3. Investors call `claimIncome` → get their share based on snapshot.
+
+### Exit & Redemption
+
+1. Admin deposits exit proceeds in UZS-asset via `depositExitProceeds`.  
+2. Call `triggerExit()` → all transfers now blocked.  
+3. Investors call `redeemOnExit(asset)` → receive payout and tokens burn.
+
+---
+
+## Configuration Notes
+
+- **Payout asset**: Use a UZS-pegged ERC-20 (e.g., the state-backed token in Uzbekistan).  
+- **Supply unit**: `SHARES_PER_YURT = 10,000 × 10^decimals()` (constant in contract).  
+- **Whitelisting & pause**: Controlled by owner (ideally a multisig).  
+- **No upgrades**, no speculative token behavior — purely asset-backed.
+This design intentionally omits critical production concerns such as audits, compliance modules, extensibility, and operational hardening.
+
+---
+
+## Dev Setup
+
+```bash
+# use Foundry
+forge install OpenZeppelin/openzeppelin-contracts
 forge build
+forge test -vv
 ```
 
-### Test
+---
 
-```shell
-forge test
-```
+## Automated Test Scenarios
 
-### Format
+See `TESTS.md` for a continuously updated list of real-world scenarios covered by the automated test suite.
 
-```shell
-forge fmt
-```
+---
 
-### Gas Snapshots
+## Legal & Regulatory Notice
 
-```shell
-forge snapshot
-```
+This codebase is provided **as‑is** with **no warranties** of any kind. Deploying tokenized assets may require regulatory authorization depending on jurisdiction. Consult qualified legal counsel and conduct independent audits before using any blockchain software in production.
 
-### Anvil
-
-```shell
-anvil
-```
-
-### Deploy
-
-```shell
-DEPLOYER_PK=<hex_pk> forge script script/Deploy.s.sol:Deploy --rpc-url <your_rpc_url> --broadcast
-```
-
-### Cast
-
-```shell
-cast <subcommand>
-```
-
-### Help
-
-```shell
-forge --help
-anvil --help
-cast --help
-```
+---

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.28;
 
-import "forge-std/Script.sol";
-import "../src/YurtFraction.sol";
+import {Script, console2} from "forge-std/Script.sol";
+import {YurtFraction} from "../src/YurtFraction.sol";
 
 contract Deploy is Script {
     function run() external {

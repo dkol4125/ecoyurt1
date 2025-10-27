@@ -1,0 +1,35 @@
+# Automated Test Scenarios
+
+This document is auto-generated from the Foundry test suite. Run `./build/scripts/update-test-scenarios.sh` to refresh the list after modifying tests.
+
+<!-- TEST_SCENARIOS_START -->
+- Mirrors post-deployment state for a new property SPV. (`test_InitialState`)
+- Property manager updates disclosure docs (IPFS pointer) via multisig. (`test_SetPropertyURI_OnlyOwner`)
+- Investor should not mutate regulated disclosures. (`test_SetPropertyURI_RevertsForNonOwner`)
+- Admin onboards/offboards investors to satisfy KYC requirements. (`test_AddAndRemoveWhitelist`)
+- Unauthorized wallet attempting to self-whitelist must fail. (`test_AddToWhitelist_OnlyOwner`)
+- Only compliance admin can revoke investor access. (`test_RemoveFromWhitelist_OnlyOwner`)
+- Prevent secondary-market trades with unvetted parties. (`test_TransferRequiresWhitelistedRecipient`)
+- Blocks sanctioned wallet from initiating transfers. (`test_TransferRequiresWhitelistedSender`)
+- Simulates regulator-imposed pause and subsequent reopening. (`test_PauseAndUnpause`)
+- Verifies only governance entity can pause/unpause flow. (`test_Pause_Unpause_OnlyOwner`)
+- Property manager deposits rental income from stablecoin reserves. (`test_DepositIncome_HappyPath`)
+- Prevent mistakes that send raw ether or zero address asset. (`test_DepositIncome_RevertsInvalidAsset`)
+- Protect against accidental zero-value bookkeeping entries. (`test_DepositIncome_RevertsZeroAmount`)
+- Only treasury wallet can fund income pot. (`test_DepositIncome_OnlyOwner`)
+- Admin cannot trigger distribution if treasury forgot to deposit cash. (`test_StartDistribution_RevertsWithoutPot`)
+- Snapshot locks pro-rata entitlements for current investor ledger. (`test_StartDistribution_RecordsState`)
+- Investors harvest their share of rental income exactly once. (`test_ClaimIncome_ProRataAndSingleUse`)
+- Rejects claims for unannounced distribution IDs. (`test_ClaimIncome_RevertsForUnknownDistribution`)
+- Dashboard query before any distribution should report zero. (`test_ClaimableIncome_NoDistribution`)
+- Property sold; all trading stops pending redemption. (`test_TriggerExit_BlocksTransfers`)
+- Prevent rogue holders from faking an exit event. (`test_TriggerExit_OnlyOwner`)
+- Manager wires sale proceeds into escrow contract. (`test_DepositExitProceeds`)
+- Guard against misconfiguring payout token. (`test_DepositExitProceeds_RevertsInvalidAsset`)
+- No no-op deposits; ensures actual liquidity hits the pool. (`test_DepositExitProceeds_RevertsZeroAmount`)
+- Only treasury can inject exit funds. (`test_DepositExitProceeds_OnlyOwner`)
+- Investors cash out of the SPV after sale, burning their shares. (`test_RedeemOnExit_ProRata`)
+- No redemption allowed while property still operating. (`test_RedeemOnExit_RevertsBeforeTrigger`)
+- Redemption must happen in the pre-agreed stablecoin. (`test_RedeemOnExit_RevertsInvalidAsset`)
+- Portfolio dashboards show zero exit proceeds before sale. (`test_ClaimableExit_BeforeTriggerIsZero`)
+<!-- TEST_SCENARIOS_END -->
