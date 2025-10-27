@@ -1,0 +1,12 @@
+© 2025 EcoYurt Ltd. All Rights Reserved.
+
+By accessing or using the source code, bytecode or documentation for the EcoYurt (EYR) Token smart-contract system (the "Materials"), you agree to the following terms:
+
+1. Grant & Scope: You receive a **single-use production deployment license** on the specified network only.
+2. Prohibited Uses: You shall *not* copy, modify, distribute, sublicense, transfer or reuse the Materials in any other network, environment or form.
+3. Ownership: Licensor retains all rights, title and interest in the Materials. No ownership or broader rights are conveyed.
+4. Termination: This license terminates automatically if you breach any term. Upon termination you must cease all use and destroy all copies of the Materials.
+5. Warranty & Limitation: The Materials are provided "AS IS", with **no warranties**. In no event shall Licensor be liable for any damages.
+6. Governing Law: This Agreement shall be governed by the laws of the Republic of Uzbekistan.
+
+EcoYurt Ltd.

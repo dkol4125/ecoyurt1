@@ -8,9 +8,9 @@
 
 ![CI](https://github.com/dkol4125/ecoyurt1/actions/workflows/ci.yml/badge.svg)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-blue)
 ![Version](https://img.shields.io/badge/Version-0.1.0-informational)
 ![Dependencies](https://img.shields.io/badge/Dependencies-Forge%20std%20%26%20OpenZeppelin-success)
+[![License](https://img.shields.io/badge/License-Commercial-blue?style=for-the-badge)](./LICENSE.txt)
 
 > **LEGAL DISCLAIMER:** This repository provides an illustrative, example-only ERC‑20 token design intended for educational and demonstration purposes. It is **not** a production‑grade implementation, has **not** undergone security review, and should **not** be deployed for real‑world financial activity. Nothing herein constitutes legal, financial, or regulatory advice.
 
@@ -71,6 +71,13 @@ forge test -vv
 forge coverage --report lcov --out lcov.info
 python3 build/scripts/check-lcov-coverage.py
 ```
+
+> Detailed environment and operations guides:
+>
+> - [Developer workstation (Mac OS/Linux)](docs/en/SETUP.dev.md)
+> - [Ops host checklist (Linux)](docs/en/SETUP.admin.md)
+> - [Production deployment (testnet & mainnet)](docs/en/SETUP.prod.md)
+> - [Multisig owner runbook](docs/en/SETUP.owner.md)
 
 ---
 
