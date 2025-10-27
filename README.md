@@ -8,7 +8,7 @@
 
 ![CI](https://github.com/dkol4125/ecoyurt1/actions/workflows/ci.yml/badge.svg)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
-![Version](https://img.shields.io/badge/Version-0.1.0-informational)
+[![Version](https://img.shields.io/badge/Version-0.1.0-informational)](https://github.com/dkol4125/ecoyurt1/releases/tag/v0.1.0)
 ![Dependencies](https://img.shields.io/badge/Dependencies-Forge%20std%20%26%20OpenZeppelin-success)
 [![License](https://img.shields.io/badge/License-Commercial-blue?style=for-the-badge)](./LICENSE.txt)
 
