@@ -13,3 +13,6 @@ lib/
 
 # OS junk
 .DS_Store
+
+# lcov coverage output
+lcov.info

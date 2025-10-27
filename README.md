@@ -1,5 +1,17 @@
 # EcoYurt (EYR) — Fractional Real-Estate Token
 
+[🇬🇧 English](./README.md)  
+[🇺🇿 Oʻzbekcha](./README.uz.md)  
+[🇷🇺 Русский](./README.ru.md)
+
+---
+
+![CI](https://github.com/dkol4125/ecoyurt1/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Version](https://img.shields.io/badge/Version-0.1.0-informational)
+![Dependencies](https://img.shields.io/badge/Dependencies-Forge%20std%20%26%20OpenZeppelin-success)
+
 > **LEGAL DISCLAIMER:** This repository provides an illustrative, example-only ERC‑20 token design intended for educational and demonstration purposes. It is **not** a production‑grade implementation, has **not** undergone security review, and should **not** be deployed for real‑world financial activity. Nothing herein constitutes legal, financial, or regulatory advice.
 
 A minimal ERC-20 token for fractional ownership of yurts in Uzbekistan, with built-in income distribution and exit mechanics. This implementation is intended strictly as an example and must not be used as-is in production environments.
@@ -55,6 +67,9 @@ This design intentionally omits critical production concerns such as audits, com
 forge install OpenZeppelin/openzeppelin-contracts
 forge build
 forge test -vv
+# run coverage
+forge coverage --report lcov --out lcov.info
+python3 build/scripts/check-lcov-coverage.py
 ```
 
 ---

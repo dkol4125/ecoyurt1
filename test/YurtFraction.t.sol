@@ -20,13 +20,7 @@ contract YurtFractionTest is Test {
     uint256 internal constant EXIT_AMOUNT = 5_000 ether;
 
     function setUp() public {
-        token = new YurtFraction(
-            "Blue Meadow Yurt Shares",
-            "YURT",
-            TOTAL_SUPPLY,
-            "ipfs://bafy...bundle",
-            OWNER
-        );
+        token = new YurtFraction("Blue Meadow Yurt Shares", "YURT", TOTAL_SUPPLY, "ipfs://bafy...bundle", OWNER);
         uzs = new ERC20Mock();
 
         vm.label(OWNER, "owner");
@@ -68,9 +62,7 @@ contract YurtFractionTest is Test {
 
     function test_SetPropertyURI_RevertsForNonOwner() public {
         // Investor should not mutate regulated disclosures.
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.setPropertyURI("ipfs://nope");
     }
@@ -96,9 +88,7 @@ contract YurtFractionTest is Test {
         address[] memory accounts = new address[](1);
         accounts[0] = ALICE;
 
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.addToWhitelist(accounts);
     }
@@ -110,9 +100,7 @@ contract YurtFractionTest is Test {
         address[] memory accounts = new address[](1);
         accounts[0] = ALICE;
 
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.removeFromWhitelist(accounts);
     }
@@ -175,18 +163,14 @@ contract YurtFractionTest is Test {
 
     function test_Pause_Unpause_OnlyOwner() public {
         // Verifies only governance entity can pause/unpause flow.
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.pause();
 
         vm.prank(OWNER);
         token.pause();
 
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.unpause();
     }
@@ -217,9 +201,7 @@ contract YurtFractionTest is Test {
 
     function test_DepositIncome_OnlyOwner() public {
         // Only treasury wallet can fund income pot.
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.depositIncome(address(uzs), INCOME_AMOUNT);
     }
@@ -288,6 +270,37 @@ contract YurtFractionTest is Test {
         assertEq(uzs.balanceOf(address(token)), 0);
     }
 
+    function test_ClaimIncome_ZeroSupply() public {
+        YurtFraction zeroToken = new YurtFraction("Zero Supply", "ZERO", 0, "ipfs://bafy...zero", OWNER);
+        ERC20Mock stable = new ERC20Mock();
+        stable.mint(OWNER, 5 ether);
+        vm.prank(OWNER);
+        stable.approve(address(zeroToken), 5 ether);
+        vm.prank(OWNER);
+        zeroToken.depositIncome(address(stable), 5 ether);
+
+        vm.prank(OWNER);
+        uint256 id = zeroToken.startDistribution(address(stable));
+
+        vm.prank(OWNER);
+        zeroToken.claimIncome(id);
+
+        assertTrue(zeroToken.incomeClaimed(id, OWNER));
+        assertEq(stable.balanceOf(address(zeroToken)), 5 ether);
+    }
+
+    function test_BalanceOfAt_DefaultsToCurrentBalance() public {
+        _fundIncome(INCOME_AMOUNT);
+        vm.prank(OWNER);
+        uint256 id = token.startDistribution(address(uzs));
+
+        address outsider = address(0xDEAD);
+        assertEq(token.balanceOf(outsider), 0);
+        assertEq(token.balanceOfAt(outsider, id), 0);
+        assertEq(token.balanceOfAt(OWNER, id), token.balanceOf(OWNER));
+        assertEq(token.totalSupplyAt(id), token.totalSupply());
+    }
+
     function test_ClaimIncome_RevertsForUnknownDistribution() public {
         // Rejects claims for unannounced distribution IDs.
         vm.expectRevert(abi.encodeWithSelector(YurtFraction.InvalidAsset.selector));
@@ -329,9 +342,7 @@ contract YurtFractionTest is Test {
 
     function test_TriggerExit_OnlyOwner() public {
         // Prevent rogue holders from faking an exit event.
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.triggerExit();
     }
@@ -358,9 +369,7 @@ contract YurtFractionTest is Test {
 
     function test_DepositExitProceeds_OnlyOwner() public {
         // Only treasury can inject exit funds.
-        vm.expectRevert(
-            abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE)
-        );
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, ALICE));
         vm.prank(ALICE);
         token.depositExitProceeds(address(uzs), EXIT_AMOUNT);
     }

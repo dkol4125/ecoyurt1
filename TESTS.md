@@ -20,6 +20,8 @@ This document is auto-generated from the Foundry test suite. Run `./build/script
 - Admin cannot trigger distribution if treasury forgot to deposit cash. (`test_StartDistribution_RevertsWithoutPot`)
 - Snapshot locks pro-rata entitlements for current investor ledger. (`test_StartDistribution_RecordsState`)
 - Investors harvest their share of rental income exactly once. (`test_ClaimIncome_ProRataAndSingleUse`)
+- `test_ClaimIncome_ZeroSupply`
+- `test_BalanceOfAt_DefaultsToCurrentBalance`
 - Rejects claims for unannounced distribution IDs. (`test_ClaimIncome_RevertsForUnknownDistribution`)
 - Dashboard query before any distribution should report zero. (`test_ClaimableIncome_NoDistribution`)
 - Property sold; all trading stops pending redemption. (`test_TriggerExit_BlocksTransfers`)

@@ -11,8 +11,7 @@ contract LocalAnvilTest is Script {
     uint256 private constant BOB_SHARE = 100_000 ether;
     uint256 private constant INCOME_AMOUNT = 1_000 ether;
     uint256 private constant EXIT_AMOUNT = 5_000 ether;
-    string private constant DEFAULT_MNEMONIC =
-        "test test test test test test test test test test test junk";
+    string private constant DEFAULT_MNEMONIC = "test test test test test test test test test test test junk";
 
     uint256 private ownerKey;
     uint256 private aliceKey;
@@ -36,13 +35,7 @@ contract LocalAnvilTest is Script {
         uint256 distributionId;
 
         vm.startBroadcast(ownerKey);
-        token = new YurtFraction(
-            "Blue Meadow Yurt Shares",
-            "YURT",
-            TOTAL_SUPPLY,
-            "ipfs://bafy...bundle",
-            ownerAddr
-        );
+        token = new YurtFraction("Blue Meadow Yurt Shares", "YURT", TOTAL_SUPPLY, "ipfs://bafy...bundle", ownerAddr);
         uzs = new ERC20Mock();
 
         address[] memory whitelist = new address[](2);
@@ -67,25 +60,16 @@ contract LocalAnvilTest is Script {
         vm.startBroadcast(aliceKey);
         token.claimIncome(distributionId);
         vm.stopBroadcast();
-        require(
-            uzs.balanceOf(aliceAddr) == expectedAliceIncome,
-            "alice income mismatch"
-        );
+        require(uzs.balanceOf(aliceAddr) == expectedAliceIncome, "alice income mismatch");
 
         vm.startBroadcast(bobKey);
         token.claimIncome(distributionId);
         vm.stopBroadcast();
-        require(
-            uzs.balanceOf(bobAddr) == expectedBobIncome,
-            "bob income mismatch"
-        );
+        require(uzs.balanceOf(bobAddr) == expectedBobIncome, "bob income mismatch");
 
         vm.startBroadcast(ownerKey);
         token.claimIncome(distributionId);
-        require(
-            uzs.balanceOf(ownerAddr) == EXIT_AMOUNT + expectedOwnerIncome,
-            "owner income mismatch"
-        );
+        require(uzs.balanceOf(ownerAddr) == EXIT_AMOUNT + expectedOwnerIncome, "owner income mismatch");
 
         token.depositExitProceeds(address(uzs), EXIT_AMOUNT);
         token.triggerExit();
@@ -96,25 +80,15 @@ contract LocalAnvilTest is Script {
         vm.startBroadcast(aliceKey);
         token.redeemOnExit(address(uzs));
         vm.stopBroadcast();
-        require(
-            uzs.balanceOf(aliceAddr) ==
-                expectedAliceIncome + expectedAliceExit,
-            "alice exit mismatch"
-        );
-        require(
-            token.balanceOf(aliceAddr) == 0,
-            "alice balance not burned"
-        );
+        require(uzs.balanceOf(aliceAddr) == expectedAliceIncome + expectedAliceExit, "alice exit mismatch");
+        require(token.balanceOf(aliceAddr) == 0, "alice balance not burned");
 
         uint256 expectedBobExit = _exitShare(token, address(uzs), bobAddr);
 
         vm.startBroadcast(bobKey);
         token.redeemOnExit(address(uzs));
         vm.stopBroadcast();
-        require(
-            uzs.balanceOf(bobAddr) == expectedBobIncome + expectedBobExit,
-            "bob exit mismatch"
-        );
+        require(uzs.balanceOf(bobAddr) == expectedBobIncome + expectedBobExit, "bob exit mismatch");
         require(token.balanceOf(bobAddr) == 0, "bob balance not burned");
 
         uint256 expectedOwnerExit = _exitShare(token, address(uzs), ownerAddr);
@@ -122,34 +96,20 @@ contract LocalAnvilTest is Script {
         vm.startBroadcast(ownerKey);
         token.redeemOnExit(address(uzs));
         vm.stopBroadcast();
-        require(
-            uzs.balanceOf(ownerAddr) ==
-                expectedOwnerIncome + expectedOwnerExit,
-            "owner exit mismatch"
-        );
+        require(uzs.balanceOf(ownerAddr) == expectedOwnerIncome + expectedOwnerExit, "owner exit mismatch");
 
         require(token.totalSupply() == 0, "total supply not zeroed");
         require(token.exitPot(address(uzs)) == 0, "exit pot leftover");
-        require(
-            uzs.balanceOf(address(token)) == 0,
-            "token holds residual uzs"
-        );
+        require(uzs.balanceOf(address(token)) == 0, "token holds residual uzs");
 
         console2.log("Local Anvil smoke test passed");
     }
 
-    function _incomeShare(
-        YurtFraction tkn,
-        address account
-    ) private view returns (uint256) {
+    function _incomeShare(YurtFraction tkn, address account) private view returns (uint256) {
         return (INCOME_AMOUNT * tkn.balanceOf(account)) / TOTAL_SUPPLY;
     }
 
-    function _exitShare(
-        YurtFraction tkn,
-        address asset,
-        address account
-    ) private view returns (uint256) {
+    function _exitShare(YurtFraction tkn, address asset, address account) private view returns (uint256) {
         uint256 supply = tkn.totalSupply();
         if (supply == 0) return 0;
         uint256 pot = tkn.exitPot(asset);
