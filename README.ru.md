@@ -1,4 +1,4 @@
-# EcoYurt (EYR) — Долевой Токен Недвижимости
+# EcoYurta (EYR) — Долевой Токен Недвижимости
 
 [🇬🇧 English](./README.md)  
 [🇺🇿 Oʻzbekcha](./README.uz.md)  
