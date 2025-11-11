@@ -1,4 +1,4 @@
-# EcoYurt (EYR) — Fraktsiyal Ko'chmas Mulk Tokeni
+# EcoYurta (EYR) — Fraktsiyal Ko'chmas Mulk Tokeni
 
 [🇬🇧 English](./README.md)  
 [🇺🇿 Oʻzbekcha](./README.uz.md)  
