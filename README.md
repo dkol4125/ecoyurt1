@@ -1,4 +1,4 @@
-# EcoYurt (EYR) — Fractional Real-Estate Token
+# EcoYurta (EYR) — Fractional Real-Estate Token
 
 [🇬🇧 English](./README.md)  
 [🇺🇿 Oʻzbekcha](./README.uz.md)  
